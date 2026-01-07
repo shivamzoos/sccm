@@ -1,0 +1,40 @@
+## Windows Wmi Check
+## File: C:\ProgramData\Datadog\conf.d\wmi_check.d\conf.yaml
+
+init_config:
+
+
+instances:
+  ## Memory Performance Counters
+  - class: Win32_PerfFormattedData_PerfOS_Memory
+    metrics:
+      ## Memory Pages Per Second
+      ## High page fault rate indicates insufficient physical memory
+      ## SCOM threshold: 5000 pages/sec
+      - [PagesPerSec, system.mem.paging.pages_per_sec, gauge]
+      
+      ## Additional Memory Metrics (Optional - for deeper analysis)
+      ## Uncomment below if you want more memory paging details
+      
+      # - [PageFaultsPersec, system.mem.paging.page_faults_per_sec, gauge]
+      # - [PageReadsPersec, system.mem.paging.page_reads_per_sec, gauge]
+      # - [PageWritesPersec, system.mem.paging.page_writes_per_sec, gauge]
+      # - [CacheBytes, system.mem.cache.bytes, gauge]
+      # - [CommitLimit, system.mem.commit_limit, gauge]
+      # - [CommittedBytes, system.mem.committed_bytes, gauge]
+    
+    ## Custom tags for filtering and alerting
+    tags:
+      - metric_type:memory_paging
+      - monitor_priority:p2
+      - alert_severity:warning
+      - environment:production
+      - project:exl_scom_migration
+      - monitored_by:datadog
+      - alert_channel:servicenow
+      - team:exl_infra
+      - scom_equivalent:yes
+    
+    ## Collection interval (in seconds)
+    ## SCOM baseline: 300 seconds (5 minutes)
+    min_collection_interval: 300

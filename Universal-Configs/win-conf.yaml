@@ -1,0 +1,62 @@
+## Windows Core Services Monitoring Configuration
+## File: C:\ProgramData\Datadog\conf.d\windows_service.d\conf.yaml
+
+init_config:
+
+instances:
+  - services:
+      ## DHCP Client - IP address assignment
+      - ^Dhcp$
+      
+      ## DNS Client - Name resolution
+      - ^Dnscache$
+      
+      ## Plug and Play - Hardware device management
+      - ^PlugPlay$
+      
+      ## Remote Procedure Call (RPC) - Inter-process communication
+      - ^RpcSs$
+      
+      ## Server - File and print sharing
+      - ^LanmanServer$
+      
+      ## TCP/IP NetBIOS Helper - NetBIOS name resolution
+      - ^LmHosts$
+      
+      ## Windows Event Log - System event logging
+      - ^EventLog$
+      
+      ## Windows Defender Firewall - Network security
+      - ^MpsSvc$
+      
+      ## Windows Remote Management (WinRM) - Remote administration
+      - ^WinRM$
+      
+      ## Workstation - Client network connections
+      - ^LanmanWorkstation$
+      
+      ## Computer Browser - Network browsing (deprecated in modern Windows)
+      - ^Browser$
+      
+      ## Windows Management Instrumentation (WMI) - System management
+      - ^Winmgmt$
+    
+    ## Tag services with startup type (Automatic, Manual, Disabled)
+    windows_service_startup_type_tag: true
+    
+    ## Include service display names as tags
+    collect_display_name_as_tag: true
+    
+    ## Disable legacy service tag warning
+    disable_legacy_service_tag: true
+    
+    ## Custom tags for monitoring and alerting
+    tags:
+      - service_group:windows_core_services
+      - monitor_priority:p2
+      - environment:production
+      - project:exl_scom_migration
+      - monitored_by:datadog
+      - alert_channel:servicenow
+      - team:exl_infra
+      - server_type:windows_computer
