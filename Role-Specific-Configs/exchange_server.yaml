@@ -1,10 +1,121 @@
+## ============================================================================
+## Microsoft Exchange Server - Official Datadog Configuration
+## ============================================================================
+## File: C:\ProgramData\Datadog\conf.d\exchange_server.d\conf.yaml
+## Documentation: https://docs.datadoghq.com/integrations/exchange-server/
+## Minimum Agent Version: 6.11+
+## ============================================================================
+
+init_config:
+
+instances:
+  - 
+    ## @param host - string - optional - default: localhost
+    ## Host to connect to.
+    # host: localhost
+
+    ## @param tags - list of strings - optional
+    ## A list of tags to attach to every metric and service check emitted.
+    tags:
+      - role:exchange_server
+      - environment:production
+      - project:exl_scom_migration
+      - team:exl_infra
+      - alert_channel:servicenow
+
+    ## Exchange Server metrics are collected by default via Windows Performance Counters
+    ## The integration automatically collects these key metrics:
+
+## ============================================================================
+## DEFAULT METRICS COLLECTED (No extra configuration needed)
+## ============================================================================
+##
+## MSExchange ADAccess Processes:
+##   - exchange.adaccess.ldap_read_time
+##   - exchange.adaccess.ldap_search_time
+##
+## MSExchange ActiveSync:
+##   - exchange.activesync.requests_per_sec
+##   - exchange.activesync.ping_commands_pending
+##
+## MSExchange Availability Service:
+##   - exchange.availability.requests_per_sec
+##
+## MSExchange Database:
+##   - exchange.database.io_reads_per_sec
+##   - exchange.database.io_writes_per_sec
+##
+## MSExchange HttpProxy:
+##   - exchange.httpproxy.avg_auth_latency
+##   - exchange.httpproxy.mailbox_proxy_failure_rate
+##
+## MSExchange OWA:
+##   - exchange.owa.requests_per_sec
+##
+## MSExchange RpcClientAccess:
+##   - exchange.rpc.client_access.active_user_count
+##   - exchange.rpc.client_access.connection_count
+##   - exchange.rpc.client_access.rpc_requests
+##
+## MSExchangeIS Mailbox:
+##   - exchange.is.mailbox.messages_delivered_per_sec
+##   - exchange.is.mailbox.messages_sent_per_sec
+##
+## MSExchangeTransport Queues:
+##   - exchange.transport.queues.active_mailbox_delivery
+##   - exchange.transport.queues.poison_queue_length
+##   - exchange.transport.queues.submission_queue_length
+##
+## MSExchange Transport SmtpSend/SmtpReceive:
+##   - exchange.smtp.send.messages_sent_per_sec
+##   - exchange.smtp.receive.messages_received_per_sec
+##
+## ============================================================================
+
+
+## ============================================================================
+## LOG COLLECTION (Recommended)
+## ============================================================================
+
 logs:
+  ## Transport Roles Diagnostic Logs
   - type: file
-    path: "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\TransportRoles\\Logs\\CommonDiagnosticsLog\\*"
+    path: E:\Program Files\Microsoft\Exchange Server\V15\TransportRoles\Logs\CommonDiagnosticsLog\*.log
     source: exchange-server
+    service: exchange
+    
+  ## Throttling Service Logs
   - type: file
-    path: "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\TransportRoles\\Logs\\ThrottlingService\\*"
+    path: E:\Program Files\Microsoft\Exchange Server\V15\TransportRoles\Logs\ThrottlingService\*.log
     source: exchange-server
+    service: exchange
+    
+  ## Hub Connectivity Logs
   - type: file
-    path: "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\TransportRoles\\Logs\\Hub\\Connectivity\\*"
+    path: E:\Program Files\Microsoft\Exchange Server\V15\TransportRoles\Logs\Hub\Connectivity\*.log
     source: exchange-server
+    service: exchange
+
+## ============================================================================
+## DEPLOYMENT NOTES
+## ============================================================================
+##
+## This is the official minimal configuration from Datadog docs.
+## The integration automatically discovers and monitors Exchange Server
+## performance counters without explicit counter configuration.
+##
+## AUTOMATIC METRICS:
+## - 40+ Exchange Server performance counters collected automatically
+## - No need to specify individual counters
+## - Metrics appear with "exchange.*" namespace
+##
+## REQUIREMENTS:
+## - Datadog Agent 6.11 or higher
+## - Exchange Server 2013, 2016, or 2019
+## - Agent must run with permissions to access Performance Counters
+##
+## VERIFY INSTALLATION:
+## Run: & "C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" status
+## Look for: exchange_server check status
+##
+## ============================================================================

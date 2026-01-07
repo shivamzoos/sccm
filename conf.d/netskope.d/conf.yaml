@@ -1,0 +1,56 @@
+init_config:
+
+instances:
+
+logs:
+  # ======================================================
+  # Netskope Application Logs (Python – main payloads)
+  # ======================================================
+
+  # IPsec Tunnels
+  - type: file
+    path: C:\Scripts\exl_netskope\logs\apps\netskope_ipsec_tunnels.json.log
+    service: netskope
+    source: ipsec_tunnel_status
+
+  # NPA Users
+  - type: file
+    path: C:\Scripts\exl_netskope\logs\apps\netskope_npa_users.json.log
+    service: netskope
+    source: npa_users
+
+  # Page Redirects
+  - type: file
+    path: C:\Scripts\exl_netskope\logs\apps\netskope_page_redirects.json.log
+    service: netskope
+    source: page_url_redirects
+
+  # Page Bypass - FIXED: Updated filename to match actual file
+  - type: file
+    path: C:\Scripts\exl_netskope\logs\apps\netskope_page_url_bypass.json.log
+    service: netskope
+    source: page_url_bypass
+
+  # URL Policy Details (daily)
+  - type: file
+    path: C:\Scripts\exl_netskope\logs\apps\netskope_url_policies.json.log
+    service: netskope
+    source: url_policy_details
+
+  # ======================================================
+  # Netskope Error Logs (Python exceptions / API failures)
+  # ======================================================
+
+  - type: file
+    path: C:\Scripts\exl_netskope\logs\errors\*_error.json.log
+    service: netskope
+    source: netskope_error
+
+  # ======================================================
+  # Scheduler / Execution History (PowerShell wrappers)
+  # ======================================================
+
+  - type: file
+    path: C:\Scripts\exl_netskope\logs\history\*.history.jsonl
+    service: netskope
+    source: netskope_scheduler

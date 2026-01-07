@@ -1,0 +1,46 @@
+init_config:
+
+instances:
+
+logs:
+  # ======================================================
+  # Application Logs (Python – main payloads)
+  # ======================================================
+
+  - type: file
+    path: C:\Scripts\exl_systrack\logs\apps\sv_appcrash.json.log
+    service: systrack
+    source: sv_appcrash
+
+  - type: file
+    path: C:\Scripts\exl_systrack\logs\apps\sv_appfault.json.log
+    service: systrack
+    source: sv_appfault
+
+  - type: file
+    path: C:\Scripts\exl_systrack\logs\apps\sv_health_desktop.json.log
+    service: systrack
+    source: sv_health_desktop
+
+  - type: file
+    path: C:\Scripts\exl_systrack\logs\apps\sv_reboot_health.json.log
+    service: systrack
+    source: sv_reboot_health
+
+  # ======================================================
+  # Application Error Logs (Python exceptions / API errors)
+  # ======================================================
+
+  - type: file
+    path: C:\Scripts\exl_systrack\logs\errors\*_error.json.log
+    service: systrack
+    source: systrack_error
+
+  # ======================================================
+  # Scheduler / Execution History (PowerShell wrappers)
+  # ======================================================
+
+  - type: file
+    path: C:\Scripts\exl_systrack\logs\history\*_status.history.jsonl
+    service: systrack
+    source: systrack_scheduler
