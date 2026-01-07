@@ -1,0 +1,15 @@
+init_config:
+
+instances:
+  - 
+    tags:
+      - role:dns_server
+      - environment:production
+      - team:exl_infra
+
+logs:
+  - type: windows_event
+    channel_path: Microsoft-Windows-DNSServer/Audit
+    source: microsoft-dns
+    service: microsoft-dns
+    sourcecategory: windowsevent

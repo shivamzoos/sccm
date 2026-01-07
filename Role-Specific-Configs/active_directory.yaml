@@ -1,0 +1,20 @@
+## ============================================================================
+## Active Directory - Official Datadog Configuration
+## ============================================================================
+## File: C:\ProgramData\Datadog\conf.d\active_directory.d\conf.yaml
+## Documentation: https://docs.datadoghq.com/integrations/active-directory/
+## Minimum Agent Version: 6.0.0
+## Recommended Check Version: 4.4.0+
+## ============================================================================
+
+init_config:
+
+instances:
+  - 
+    ## Default setup collects metrics for localhost automatically
+    ## No additional configuration required
+    
+    tags:
+      - role:active_directory
+      - environment:production
+      - team:exl_infra

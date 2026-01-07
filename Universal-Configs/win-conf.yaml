@@ -1,44 +1,62 @@
+## ============================================================================
 ## Windows Core Services Monitoring Configuration
+## ============================================================================
 ## File: C:\ProgramData\Datadog\conf.d\windows_service.d\conf.yaml
+## Scope: ALL Windows Servers (Universal Configuration)
+## Priority: P2 Critical Monitoring
+## ============================================================================
+## 
+## Purpose: Monitor 13 critical Windows services (SCOM baseline match)
+## SCOM Equivalent: Windows core service health monitors
+## 
+## NOTE: "Max Concurrent API Monitor" is not a Windows service - it's a
+##       SCOM performance counter monitor, not included in this config.
+## ============================================================================
+
 
 init_config:
 
+
 instances:
   - services:
-      ## DHCP Client - IP address assignment
+      ## =================================================================
+      ## CORE WINDOWS SERVICES (13 services - exact SCOM match)
+      ## =================================================================
+      
+      ## 1. DHCP Client Service Health
       - ^Dhcp$
       
-      ## DNS Client - Name resolution
+      ## 2. DNS Client Service Health
       - ^Dnscache$
       
-      ## Plug and Play - Hardware device management
+      ## 3. Plug and Play Service Health
       - ^PlugPlay$
       
-      ## Remote Procedure Call (RPC) - Inter-process communication
+      ## 4. RPC Service Health
       - ^RpcSs$
       
-      ## Server - File and print sharing
+      ## 5. Server Service Health
       - ^LanmanServer$
       
-      ## TCP/IP NetBIOS Helper - NetBIOS name resolution
+      ## 6. TCP/IP NetBIOS Service Health
       - ^LmHosts$
       
-      ## Windows Event Log - System event logging
+      ## 7. Windows Event Log Service Health
       - ^EventLog$
       
-      ## Windows Defender Firewall - Network security
+      ## 8. Windows Firewall Service Health
       - ^MpsSvc$
       
-      ## Windows Remote Management (WinRM) - Remote administration
+      ## 9. Windows Remote Management Service Health
       - ^WinRM$
       
-      ## Workstation - Client network connections
+      ## 10. Workstation Service Health
       - ^LanmanWorkstation$
       
-      ## Computer Browser - Network browsing (deprecated in modern Windows)
+      ## 11. Computer Browser Service Health
       - ^Browser$
       
-      ## Windows Management Instrumentation (WMI) - System management
+      ## 12. WMI (Windows Management Instrumentation)
       - ^Winmgmt$
     
     ## Tag services with startup type (Automatic, Manual, Disabled)
@@ -59,4 +77,55 @@ instances:
       - monitored_by:datadog
       - alert_channel:servicenow
       - team:exl_infra
-      - server_type:windows_computer
+      - scom_equivalent:yes
+      - metric_type:service_health
+
+
+## ============================================================================
+## SCOM TO DATADOG SERVICE MAPPING (12 services)
+## ============================================================================
+##
+## SCOM Monitor Name              → Windows Service Name → Datadog Pattern
+## ============================================================================
+## 1.  DHCP Client Service        → Dhcp                 → ^Dhcp$
+## 2.  DNS Client Service         → Dnscache             → ^Dnscache$
+## 3.  Plug and Play Service      → PlugPlay             → ^PlugPlay$
+## 4.  RPC Service                → RpcSs                → ^RpcSs$
+## 5.  Server Service             → LanmanServer         → ^LanmanServer$
+## 6.  TCP/IP NetBIOS Service     → LmHosts              → ^LmHosts$
+## 7.  Windows Event Log Service  → EventLog             → ^EventLog$
+## 8.  Windows Firewall Service   → MpsSvc               → ^MpsSvc$
+## 9.  Windows Remote Mgmt        → WinRM                → ^WinRM$
+## 10. Workstation Service        → LanmanWorkstation    → ^LanmanWorkstation$
+## 11. Computer Browser Service   → Browser              → ^Browser$
+## 12. WMI                        → Winmgmt              → ^Winmgmt$
+##
+## NOT INCLUDED:
+## - Max Concurrent API Monitor   → Not a Windows service (SCOM perf counter)
+##
+## ============================================================================
+
+
+## ============================================================================
+## DEPLOYMENT NOTES
+## ============================================================================
+## 
+## TOTAL SERVICES: 12 Windows services monitored
+## 
+## "Max Concurrent API Monitor" EXPLANATION:
+## - This is NOT a Windows service
+## - It's a SCOM performance counter that monitors concurrent API calls
+## - Cannot be monitored via windows_service integration
+## - Requires custom WMI or performance counter monitoring
+## - Will be handled separately in custom monitoring phase
+## 
+## VERIFY DEPLOYMENT:
+## Run: & "C:\Program Files\Datadog\Datadog Agent\bin\agent.exe" status
+## Expected: windows_service check showing 12 services
+## 
+## SERVICE CHECK OUTPUT:
+## - Metric: windows_service.state
+## - States: OK (running), CRITICAL (stopped), UNKNOWN (not found)
+## - Tags: service:<name>, startup_type:<type>, display_name:<name>
+## 
+## ============================================================================
